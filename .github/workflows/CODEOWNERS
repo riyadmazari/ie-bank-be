@@ -1,0 +1,15 @@
+# CODEOWNERS FOR THE FULLSTACK BACKEND
+
+# These users are the default owners for everything in the repo.
+* @sarwari-mallela
+* @asaurasieu
+* @papilioaureus
+* @woonscode
+* @11acc
+* @smorenolasa1 
+* @panchomb
+* @clorenzol 
+* @riyadmazari 
+
+# Higher priority owners for the fullstack directory
+/Fullstack-be/* @smorenolasa1 @panchomb
