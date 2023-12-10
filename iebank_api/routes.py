@@ -21,6 +21,7 @@ def load_user(id):
 
 @app.route('/')
 def hello_world():
+    app.logger.debug('Route / called')
     return 'Hello, World!'
 
 @app.route('/get_current_user', methods=['GET'])

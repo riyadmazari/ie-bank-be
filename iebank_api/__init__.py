@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
+from applicationinsights.flask.ext import AppInsights
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -33,9 +34,11 @@ db = SQLAlchemy(app)
 from iebank_api.models import Account, User
 with app.app_context():
     db.create_all() #If the environment variable is set to local, whihc it is for our machine
-    # admin = User("admin", "admin", "admin", True)
-    # db.session.add(admin)
-    # db.session.commit()
+    admin = User.query.filter_by(username="admin").first()
+    if not admin:
+        admin = User("admin", "admin", "admin", True)
+        db.session.add(admin)
+        db.session.commit()
     login_manager.login_view = '/login'
     login_manager.init_app(app)
 
@@ -48,3 +51,9 @@ CORS(app, supports_credentials=True, samesite="None")
 
 
 from iebank_api import routes
+
+appinsights = AppInsights(app)
+@app.after_request
+def after_request(response):
+    appinsights.flush()
+    return response
