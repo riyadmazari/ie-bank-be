@@ -88,6 +88,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: 'Set ENV based on event'
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ENV=uat" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              echo "ENV=prod" >> $GITHUB_ENV
+            else
+              echo "ENV=dev" >> $GITHUB_ENV
+            fi
+          fi
+
 
       - uses: azure/webapps-deploy@v3
         with:
