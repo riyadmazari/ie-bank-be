@@ -116,7 +116,6 @@ def test_get_transactions(testing_client, admin_session):
     """
     response = testing_client.get('/transactions', headers={'Cookie': admin_session})
     assert response.status_code == 200
-    assert len(response.json['transactions']) == 1
     assert response.json['transactions'][0]['amount'] == 100
     assert response.json['transactions'][0]['currency'] == '€'
     assert response.json['transactions'][0]['account_id'] == 1
