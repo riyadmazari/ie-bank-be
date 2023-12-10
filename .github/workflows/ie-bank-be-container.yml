@@ -17,6 +17,11 @@ env:
   KEY_VAULT_SECRET_NAME_ACR_PASSWORD: 'acr-password1'
   IMAGE_NAME: ie-bank-be
   AZURE_WEBAPP_NAME: grp4-be
+  DBUSER: 'iebankdbadmin'
+  DBHOST: 'grp4-dbsrv'
+  DBURL: 'postgres.database.azure.com'
+  DBNAME: 'grp4-db'
+
 
 jobs:
   build:
@@ -37,7 +42,13 @@ jobs:
               echo "ENV=dev" >> $GITHUB_ENV
             fi
           fi
-          
+
+      - name: 'Set db values'
+        run: |
+        echo "DBHOST=${{ env.DBHOST }}-${{ env.ENV }}.${{env.DBURL}}" >> $GITHUB_ENV
+        echo "DBNAME=${{ env.DBNAME }}-${{ env.ENV }}" >> $GITHUB_ENV
+        echo "DBPASS=${{ secrets.DBPASS }}" >> $GITHUB_ENV
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v3
         with:
