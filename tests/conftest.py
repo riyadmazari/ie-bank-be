@@ -27,6 +27,10 @@ def testing_client():
         db.session.add_all([admin_account, nonadmin_account])
         db.session.commit()
 
+        with open('test.txt', 'a') as f:
+            f.write('Creating account: ' + str(admin_user.email) + ' ' + str(admin_user.password) + '\n')
+            f.write('Creating account: ' + str(nonadmin_user.email) + ' ' + str(nonadmin_user.password) + '\n')
+
         with app.test_client() as testing_client:
             yield testing_client
 

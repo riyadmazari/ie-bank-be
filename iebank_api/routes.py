@@ -158,6 +158,7 @@ def create_user():
         response["success"] = True
     except:
         response["message"] = "Error creating user"
+        db.session.rollback()
     
     return jsonify(response)
 
@@ -191,6 +192,7 @@ def delete_user(id):
             response['message'] = 'Error deleting user'
             response["error"] = str(e)
             response["success"] = False
+            db.session.rollback()
     else:
         response['message'] = 'User not found'
     
@@ -227,6 +229,7 @@ def delete_account(id):
             response["success"] = True
         except Exception as e:
             response['message'] = 'Error deleting account'
+            db.session.rollback()
     else:
         response['message'] = 'Account not found'
 
