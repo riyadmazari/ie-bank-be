@@ -45,9 +45,9 @@ jobs:
 
       - name: 'Set db values'
         run: |
-        echo "DBHOST=${{ env.DBHOST }}-${{ env.ENV }}.${{ env.DBURL }}" >> $GITHUB_ENV
-        echo "DBNAME=${{ env.DBNAME }}-${{ env.ENV }}" >> $GITHUB_ENV
-        echo "DBPASS=${{ secrets.DBPASS }}" >> $GITHUB_ENV
+          echo "DBHOST=${{ env.DBHOST }}-${{ env.ENV }}.${{ env.DBURL }}" >> $GITHUB_ENV
+          echo "DBNAME=${{ env.DBNAME }}-${{ env.ENV }}" >> $GITHUB_ENV
+          echo "DBPASS=${{ secrets.DBPASS }}" >> $GITHUB_ENV
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v3
