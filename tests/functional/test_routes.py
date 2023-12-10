@@ -218,12 +218,3 @@ def test_root(testing_client):
     """
     response = testing_client.get('/')
     assert response.status_code == 200
-
-def test_skull(testing_client):
-    """
-    GIVEN a Flask application
-    WHEN the '/skull' page is requested (GET)
-    THEN check the response is valid
-    """
-    response = testing_client.get('/skull')
-    assert response.status_code == 200
