@@ -18,6 +18,11 @@ class User(db.Model, UserMixin):
     accounts = db.relationship('Account', backref='user', lazy=True)
     # transactions = db.relationship('Transaction', backref='user', lazy=True)
 
+    __table_args__ = (
+        db.UniqueConstraint('username', 'status', name='uix_username_status'),
+        db.UniqueConstraint('email', 'status', name='uix_email_status'),
+    )
+
     def __repr__(self):
         return '<User %r>' % self.username
 

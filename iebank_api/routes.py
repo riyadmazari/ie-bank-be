@@ -166,12 +166,15 @@ def create_user():
 @app.route('/users/<int:id>', methods=['PUT'])
 @admin_required
 def update_user(id):
+    response = {}
+
     user = db.session.get(User, id)
     user.username = request.json['username'] if 'username' in request.json else user.username
     user.email = request.json['email'] if 'email' in request.json else user.email
     user.password = request.json['password'] if 'password' in request.json else user.password
     user.admin = request.json['admin'] if 'admin' in request.json else user.admin
     db.session.commit()
+    response["message"] = "User updated succesfully"
     return format_user(user)
 
 @app.route('/users/<int:id>', methods=['DELETE'])
