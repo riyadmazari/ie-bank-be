@@ -56,7 +56,7 @@ jobs:
           # Generate coverage report
           python -m pytest --cov=iebank_api --cov-report=xml:coverage.xml
 
-      - nmae: 'Set ENV based on event'
+      - name: 'Set ENV based on event'
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "ENV=uat" >> $GITHUB_ENV
