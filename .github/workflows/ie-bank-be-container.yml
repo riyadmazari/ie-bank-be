@@ -82,16 +82,16 @@ jobs:
       - name: 'Build and push Docker image'
         if: env.ENV == 'dev' || env.ENV == 'prod'
         run: |
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-version.outputs.version }}
           docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:${{ steps.image-version.outputs.version }}
           docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:${{ github.ref_name }}-latest
 
       - name: 'Build and push Docker image'
         if: env.ENV == 'uat' || env.ENV == 'prod'
         run: |
           export "DATE=$(date +'%Y.%m.%d.%H.%M')"
-          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:uat-${{ steps.date.outputs.date }}}
           docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:uat-latest
-          docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:uat-${{ steps.date.outputs.date }}}
           docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:uat-latest
 
       - name: 'Build and push Docker image'
