@@ -26,6 +26,18 @@ jobs:
       - name: 'Checkout Github Action'
         uses: actions/checkout@master
 
+      - name: 'Set ENV based on event'
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "ENV=uat" >> $GITHUB_ENV
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            if [ "${{ github.ref_name }}" = "main" ]; then
+              echo "ENV=prod" >> $GITHUB_ENV
+            else
+              echo "ENV=dev" >> $GITHUB_ENV
+            fi
+          fi
+          
       - name: Set up Python 3.11
         uses: actions/setup-python@v3
         with:
@@ -56,17 +68,6 @@ jobs:
           # Generate coverage report
           python -m pytest --cov=iebank_api --cov-report=xml:coverage.xml
 
-      - name: 'Set ENV based on event'
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "ENV=uat" >> $GITHUB_ENV
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            if [ "${{ github.ref_name }}" = "main" ]; then
-              echo "ENV=prod" >> $GITHUB_ENV
-            else
-              echo "ENV=dev" >> $GITHUB_ENV
-            fi
-          fi
 
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
