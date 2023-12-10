@@ -36,7 +36,7 @@ def login():
     email = json['email']
     password = json['password']
     user = User.query.filter_by(email=email).first()
-    if user:
+    if user and user.status == "Active":
         if user.password == password:
             response['message'] = 'Login successful'
             response['success'] = True
@@ -131,12 +131,15 @@ def get_accounts():
     else:
         accounts = current_user.accounts
 
+    accounts = [account for account in accounts if account.status == "Active"]
     return {'accounts': [format_account(account) for account in accounts]}
 
 @app.route('/users', methods=['GET'])
 @admin_required
 def get_users():
     users = User.query.all()
+
+    users = [user for user in users if user.status == "Active"]
     return {'users': [format_user(user) for user in users]}
 
 @app.route('/users', methods=['POST'])
@@ -165,12 +168,15 @@ def create_user():
 @app.route('/users/<int:id>', methods=['PUT'])
 @admin_required
 def update_user(id):
+    response = {}
+
     user = db.session.get(User, id)
     user.username = request.json['username'] if 'username' in request.json else user.username
     user.email = request.json['email'] if 'email' in request.json else user.email
     user.password = request.json['password'] if 'password' in request.json else user.password
     user.admin = request.json['admin'] if 'admin' in request.json else user.admin
     db.session.commit()
+    response["message"] = "User updated succesfully"
     return format_user(user)
 
 @app.route('/users/<int:id>', methods=['DELETE'])
@@ -184,7 +190,8 @@ def delete_user(id):
 
     if user:
         try:
-            db.session.delete(user)
+            # db.session.delete(user)
+            user.status = "Inactive"
             db.session.commit()
             response['message'] = 'User deleted'
             response["success"] = True
@@ -214,7 +221,7 @@ def update_account(id):
     return format_account(account)
 
 @app.route('/accounts/<int:id>', methods=['DELETE'])
-@admin_required
+@login_required
 def delete_account(id):
     response = {}
     response["success"] = False
@@ -223,7 +230,8 @@ def delete_account(id):
 
     if account:
         try:
-            db.session.delete(account)
+            # db.session.delete(account)
+            account.status = "Inactive"
             db.session.commit()
             response['message'] = 'Account deleted'
             response["success"] = True

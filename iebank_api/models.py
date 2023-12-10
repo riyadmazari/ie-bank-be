@@ -12,10 +12,16 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(64), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    status = db.Column(db.String(10), nullable=False, default="Active")
     
     # Add a relationship to the Account model
     accounts = db.relationship('Account', backref='user', lazy=True)
     # transactions = db.relationship('Transaction', backref='user', lazy=True)
+
+    __table_args__ = (
+        db.UniqueConstraint('username', 'status', name='uix_username_status'),
+        db.UniqueConstraint('email', 'status', name='uix_email_status'),
+    )
 
     def __repr__(self):
         return '<User %r>' % self.username
