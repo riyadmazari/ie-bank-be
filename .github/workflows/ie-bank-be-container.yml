@@ -11,7 +11,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  REGISTRY_LOGIN_SERVER: grp4cr.azurecr.io
+  REGISTRY_LOGIN_SERVER: grp4cr
   KEY_VAULT_NAME: grp4-keyvault
   KEY_VAULT_SECRET_NAME_ACR_USERNAME: 'acr-username'
   KEY_VAULT_SECRET_NAME_ACR_PASSWORD: 'acr-password1'
@@ -102,6 +102,13 @@ jobs:
 
 
       - uses: azure/webapps-deploy@v3
+        if: env.ENV != 'prod'
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}-${{ env.ENV }}
-          images: '${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
+          images: '${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
+
+      - uses: azure/webapps-deploy@v3
+        if: env.ENV == 'prod'
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}-${{ env.ENV }}
+          images: '${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
