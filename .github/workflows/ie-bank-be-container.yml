@@ -11,7 +11,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  REGISTRY_LOGIN_SERVER: team4acr.azurecr.io
+  REGISTRY_LOGIN_SERVER: grp4cr.azurecr.io
   KEY_VAULT_NAME: grp4-keyvault
   KEY_VAULT_SECRET_NAME_ACR_USERNAME: 'acr-username'
   KEY_VAULT_SECRET_NAME_ACR_PASSWORD: 'acr-password1'
