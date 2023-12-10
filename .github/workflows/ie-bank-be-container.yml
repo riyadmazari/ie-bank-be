@@ -91,9 +91,9 @@ jobs:
         if: env.ENV == 'uat' || env.ENV == 'prod'
         run: |
           docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:uat-$(date +'%Y.%m.%d.%H.%M')
-          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:uat-latest
           docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:uat-$(date +'%Y.%m.%d.%H.%M')
-          docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:${{ github.ref_name }}-latest
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{env.IMAGE_NAME}}:uat-latest
 
       - name: 'Build and push Docker image'
         if: env.ENV == 'prod'
