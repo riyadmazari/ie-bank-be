@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     
     # Add a relationship to the Account model
     accounts = db.relationship('Account', backref='user', lazy=True)
-    # transactions = db.relationship('Transaction', backref='user', lazy=True)
+    # transactions = db.relationship('Transaction', backref='user', lazy=True) 
 
     __table_args__ = (
         db.UniqueConstraint('username', 'status', name='uix_username_status'),
