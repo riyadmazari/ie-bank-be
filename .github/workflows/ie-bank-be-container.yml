@@ -123,5 +123,5 @@ jobs:
 
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}-${{ env.ENV }}}
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}-${{ env.ENV }}
           images: '${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
