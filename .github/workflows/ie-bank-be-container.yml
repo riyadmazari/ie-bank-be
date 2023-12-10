@@ -30,7 +30,7 @@ jobs:
       steps:
       # checkout the repo
       - name: 'Checkout Github Action'
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: 'Set ENV based on event'
         run: |
