@@ -12,6 +12,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(64), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    status = db.Column(db.String(10), nullable=False, default="Active")
     
     # Add a relationship to the Account model
     accounts = db.relationship('Account', backref='user', lazy=True)
