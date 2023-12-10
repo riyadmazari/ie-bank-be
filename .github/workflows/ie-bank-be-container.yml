@@ -132,7 +132,7 @@ jobs:
       - uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}-uat
-          images: '${{ env.REGISTRY_LOGIN_SERVER }}${{ env.ENV }}.azurecr.io/${{ env.IMAGE_NAME }}:uat-latest'
+          images: '${{ env.REGISTRY_LOGIN_SERVER }}uat.azurecr.io/${{ env.IMAGE_NAME }}:uat-latest'
   
   deploy-prod:
     if: github.ref == 'refs/heads/main'
