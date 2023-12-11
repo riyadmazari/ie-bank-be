@@ -55,11 +55,20 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 'Get docker registry credentials from key vault'
+        if: env.ENV == 'dev' || env.ENV == 'uat'
         uses: azure/cli@v1
         with:
           inlineScript: |
             echo "REGISTRY_USERNAME=$(az keyvault secret show --name ${{ env.KEY_VAULT_SECRET_NAME_ACR_USERNAME }} --vault-name ${{ env.KEY_VAULT_NAME }}-${{ env.ENV }} --query value -o tsv)" >> $GITHUB_ENV
             echo "REGISTRY_PASSWORD=$(az keyvault secret show --name ${{ env.KEY_VAULT_SECRET_NAME_ACR_PASSWORD }} --vault-name ${{ env.KEY_VAULT_NAME }}-${{ env.ENV }} --query value -o tsv)" >> $GITHUB_ENV
+
+      - name: 'Get docker registry credentials from key vault'
+        if: env.ENV == 'prod'
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            echo "REGISTRY_USERNAME=$(az keyvault secret show --name ${{ env.KEY_VAULT_SECRET_NAME_ACR_USERNAME }} --vault-name ${{ env.KEY_VAULT_NAME }}-production --query value -o tsv)" >> $GITHUB_ENV
+            echo "REGISTRY_PASSWORD=$(az keyvault secret show --name ${{ env.KEY_VAULT_SECRET_NAME_ACR_PASSWORD }} --vault-name ${{ env.KEY_VAULT_NAME }}-production --query value -o tsv)" >> $GITHUB_ENV
 
       - uses: azure/docker-login@v1
         if: env.ENV != 'prod'
@@ -71,7 +80,7 @@ jobs:
       - uses: azure/docker-login@v1
         if: env.ENV == 'prod'
         with:
-          login-server: ${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io
+          login-server: ${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io
           username: ${{ env.REGISTRY_USERNAME }}
           password: ${{ env.REGISTRY_PASSWORD }}
 
@@ -97,10 +106,10 @@ jobs:
       - name: 'Build and push Docker image'
         if: env.ENV == 'prod'
         run: |
-          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-version.outputs.version }}
-          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest
-          docker push ${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{env.IMAGE_NAME}}:${{ steps.image-version.outputs.version }}
-          docker push ${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{env.IMAGE_NAME}}:${{ github.ref_name }}-latest
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io/${{ env.IMAGE_NAME }}:${{ steps.image-version.outputs.version }}
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io/${{env.IMAGE_NAME}}:${{ steps.image-version.outputs.version }}
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io/${{env.IMAGE_NAME}}:${{ github.ref_name }}-latest
 
   deploy-dev:
     if: github.event_name != 'pull_request'
@@ -148,4 +157,4 @@ jobs:
       - uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}-prod
-          images: '${{ env.REGISTRY_LOGIN_SERVER }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
+          images: '${{ env.REGISTRY_LOGIN_SERVER }}prod.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-latest'
