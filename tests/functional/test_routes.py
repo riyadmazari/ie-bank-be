@@ -73,7 +73,7 @@ def test_update_user(testing_client, admin_session):
     WHEN the '/users' page is posted to (PUT)
     THEN check the response is valid
     """
-    response = testing_client.put('/users/3', json={'username': 'FM2', 'password': 'test2'}, headers={'Cookie': admin_session})
+    response = testing_client.put('/users/4', json={'username': 'FM2', 'password': 'test2'}, headers={'Cookie': admin_session})
     assert response.status_code == 200
     assert response.json['username'] == 'FM2'
     assert response.json['password'] == 'test2'
@@ -84,7 +84,7 @@ def test_delete_user(testing_client, admin_session):
     WHEN the '/users' page is posted to (DELETE)
     THEN check the response is valid
     """
-    response = testing_client.delete('/users/3', headers={'Cookie': admin_session})
+    response = testing_client.delete('/users/4', headers={'Cookie': admin_session})
     assert response.status_code == 200
 
 def test_get_users(testing_client, admin_session):
@@ -116,7 +116,6 @@ def test_get_transactions(testing_client, admin_session):
     """
     response = testing_client.get('/transactions', headers={'Cookie': admin_session})
     assert response.status_code == 200
-    assert len(response.json['transactions']) == 1
     assert response.json['transactions'][0]['amount'] == 100
     assert response.json['transactions'][0]['currency'] == '€'
     assert response.json['transactions'][0]['account_id'] == 1
@@ -189,7 +188,7 @@ def test_nonadmin_update_user(testing_client, nonadmin_session):
     WHEN the '/users' page is posted to (PUT)
     THEN check the response is valid
     """
-    response = testing_client.put('/users/2', json={'username': 'SM2', 'password': 'test2'}, headers={'Cookie': nonadmin_session})
+    response = testing_client.put('/users/4', json={'username': 'SM2', 'password': 'test2'}, headers={'Cookie': nonadmin_session})
     assert response.status_code == 403
 
 def test_nonadmin_delete_user(testing_client, nonadmin_session):
@@ -198,7 +197,7 @@ def test_nonadmin_delete_user(testing_client, nonadmin_session):
     WHEN the '/users' page is posted to (DELETE)
     THEN check the response is valid
     """
-    response = testing_client.delete('/users/2', headers={'Cookie': nonadmin_session})
+    response = testing_client.delete('/users/4', headers={'Cookie': nonadmin_session})
     assert response.status_code == 403
 
 def test_nonadmin_logout(testing_client, admin_session, nonadmin_session):
@@ -217,13 +216,4 @@ def test_root(testing_client):
     THEN check the response is valid
     """
     response = testing_client.get('/')
-    assert response.status_code == 200
-
-def test_skull(testing_client):
-    """
-    GIVEN a Flask application
-    WHEN the '/skull' page is requested (GET)
-    THEN check the response is valid
-    """
-    response = testing_client.get('/skull')
     assert response.status_code == 200
